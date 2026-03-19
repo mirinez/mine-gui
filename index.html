@@ -1,0 +1,140 @@
+<!--
+  index.html - Minecraft GUI | Portfolio Project
+  Interactive Minecraft-style inventory UI with drag-and-drop items
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- ============================================================
+       META & PAGE SETUP
+  -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minecraft GUI</title>
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+<body>
+
+  <!-- ============================================================
+       PAGE TITLE
+  -->
+  <h1>Minecraft GUI</h1>
+
+  <!-- ============================================================
+       FIRST-VISIT HINT PANEL
+       Shown once on first load, dismissed on click or after 6 seconds.
+  -->
+  <div id="hint-panel" class="hint-panel" hidden>
+    <p class="hint-panel__title">How to play</p>
+    <ul class="hint-panel__list">
+      <li>Drag items between slots</li>
+      <li>Right-click to remove an item</li>
+      <li>Double-click to inspect an item</li>
+    </ul>
+    <p class="hint-panel__dismiss">Click anywhere to dismiss</p>
+  </div>
+
+  <!-- ============================================================
+       WORKSPACE - contains the GUI panel
+  -->
+  <div class="workspace">
+
+    <!-- GUI PANEL -->
+    <div class="mc-panel">
+      <div class="hopper-gui">
+
+        <!-- Bag: 5 input slots + icon action buttons top-right -->
+        <div>
+          <div class="bag-header">
+            <div class="gui-label">Bag</div>
+            <div class="panel-actions">
+              <button class="mc-icon-btn" id="btn-info"    title="How to play">ℹ</button>
+              <button class="mc-icon-btn" id="btn-shuffle" title="Shuffle inventory">↺</button>
+              <button class="mc-icon-btn" id="btn-clear"   title="Clear all slots">✕</button>
+            </div>
+          </div>
+          <div class="grid hopper-row" id="hopper-slots">
+            <div class="slot" data-slot="h0"></div>
+            <div class="slot" data-slot="h1"></div>
+            <div class="slot" data-slot="h2"></div>
+            <div class="slot" data-slot="h3"></div>
+            <div class="slot" data-slot="h4"></div>
+          </div>
+        </div>
+
+        <!-- Inventory: 27 slots (3×9) + hotbar (1×9), built by JS -->
+        <div>
+          <div class="gui-label">Inventory</div>
+          <div class="grid inv-grid"    id="inventory-slots"></div>
+          <!-- Visual gap between inventory rows and hotbar -->
+          <div class="gap-row"></div>
+          <div class="grid hotbar-grid" id="hotbar-slots"></div>
+        </div>
+
+        <!-- Bottom padding to match original Minecraft GUI proportions -->
+        <div class="gui-bottom-spacer"></div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================
+       ITEM INSPECTOR MODAL
+       Opens on double-click; shows item name, id and a flavour description.
+  -->
+  <div id="inspector-overlay" class="inspector-overlay" hidden>
+    <div class="inspector-panel" role="dialog" aria-modal="true" aria-labelledby="inspector-name">
+
+      <button class="inspector-close" id="inspector-close" aria-label="Close inspector">✕</button>
+
+      <div class="inspector-icon-wrap">
+        <canvas id="inspector-canvas" width="128" height="128"></canvas>
+      </div>
+
+      <div class="inspector-body">
+        <p  class="inspector-label">ITEM</p>
+        <h2 class="inspector-name"  id="inspector-name"></h2>
+        <p  class="inspector-id"    id="inspector-id"></p>
+        <p  class="inspector-desc"  id="inspector-desc"></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================
+       FOOTER
+  -->
+  <footer class="site-footer">
+    <span class="site-footer__copy">&copy; 2026 MC Inventory</span>
+    <span class="site-footer__name">Míriam Domínguez Martínez</span>
+  </footer>
+
+  <!-- ============================================================
+       TOOLTIP
+  -->
+  <div id="tooltip"></div>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  -->
+  <script type="module" src="main.js"></script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
