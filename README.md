@@ -3,7 +3,7 @@
 
 **Author:** Míriam Domínguez Martínez  
 **Status:** In progress  
-**Live:** [![Minecraft GUI](https://img.shields.io/badge/Minecraft-GUI-ffffff?style=flat&labelColor=ffffff&color=ffffff)](#)
+**Live:** [![Minecraft GUI](https://[img.shields.io/badge](https://mirinez.github.io/mine-gui/)/Minecraft-GUI-ffffff?style=flat&labelColor=ffffff&color=ffffff)](#)
 
 ---
 
