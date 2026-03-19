@@ -1,4 +1,4 @@
-## Minecraft GUI  <img src="./items/World.gif" alt="GIF" width="20" />
+## Minecraft GUI  <img src="./items/Kelp.gif" alt="GIF" width="20" />
 
 
 **Author:** Míriam Domínguez Martínez  
