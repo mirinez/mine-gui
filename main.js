@@ -35,9 +35,9 @@ const inspectorCanvas   = document.getElementById('inspector-canvas');
 const inspectorName     = document.getElementById('inspector-name');
 const inspectorId       = document.getElementById('inspector-id');
 const inspectorDesc     = document.getElementById('inspector-desc');
-const btnShuffle       = document.getElementById('btn-shuffle');
-const btnClear         = document.getElementById('btn-clear');
-const btnInfo          = document.getElementById('btn-info');
+const btnShuffle        = document.getElementById('btn-shuffle');
+const btnClear          = document.getElementById('btn-clear');
+const btnInfo           = document.getElementById('btn-info');
 
 /* ================================================================
    2. GHOST CANVAS SETUP
