@@ -295,6 +295,7 @@ h1 {
   letter-spacing: 1px;
   margin-bottom: 14px;
   text-transform: uppercase;
+  text-align: center;
 }
 
 .hint-panel__list {
@@ -311,7 +312,9 @@ h1 {
   line-height: 1.8;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  text-align: center;
 }
 
 .hint-panel__icon {
