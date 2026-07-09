@@ -17,8 +17,6 @@ const inspectorId = document.getElementById('inspector-id');
 const inspectorDesc = document.getElementById('inspector-desc');
 const btnShuffle = document.getElementById('btn-shuffle');
 const btnClear = document.getElementById('btn-clear');
-const btnInfo = document.getElementById('btn-info');
-const hintPanel = document.getElementById('hint-panel');
 
 /* 2. GHOST CANVAS SETUP */
 const ghost = document.createElement('canvas');
@@ -86,7 +84,7 @@ function playWhoosh() {
   filter.Q.value = 0.8;
   src.connect(filter).connect(gain).connect(audioCtx.destination);
   gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+  gain.gain.exponentialRampToValueAtTime(0.001, cyberCtx.currentTime + 0.15);
   src.start();
 }
 
@@ -279,12 +277,6 @@ inspectorOverlay.addEventListener('click', e => e.target === inspectorOverlay &&
 document.addEventListener('keydown', e => e.key === 'Escape' && !inspectorOverlay.hidden && closeInspector());
 
 /* 16. TOOLBAR ACTIONS */
-btnInfo.addEventListener('click', () => {
-  hintPanel.classList.remove('hint-hiding');
-  hintPanel.hidden = false;
-  document.addEventListener('pointerdown', onHintDismiss);
-  setTimeout(dismissHint, 6000);
-});
 btnShuffle.addEventListener('click', () => { playWhoosh(); fillInventory(); });
 btnClear.addEventListener('click', () => { document.querySelectorAll('.slot').forEach(clearSlot); saveState(); });
 
@@ -292,16 +284,3 @@ btnClear.addEventListener('click', () => { document.querySelectorAll('.slot').fo
 buildSlots('inventory-slots', 27, 'inv');
 buildSlots('hotbar-slots', 9, 'hot');
 if (!loadState()) fillInventory();
-
-/* 18. FIRST-VISIT HINT PANEL */
-const HINT_KEY = 'mc-gui-hint-seen';
-function dismissHint() {
-  hintPanel.classList.add('hint-hiding');
-  hintPanel.addEventListener('animationend', () => { hintPanel.hidden = true; hintPanel.classList.remove('hint-hiding'); }, { once: true });
-  localStorage.setItem(HINT_KEY, '1');
-  document.removeEventListener('pointerdown', onHintDismiss);
-}
-function onHintDismiss() { dismissHint(); }
-if (!localStorage.getItem(HINT_KEY)) {
-  setTimeout(() => { hintPanel.hidden = false; document.addEventListener('pointerdown', onHintDismiss); setTimeout(dismissHint, 6000); }, 400);
-}

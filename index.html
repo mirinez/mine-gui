@@ -9,16 +9,6 @@
 <body>
   <h1>Minecraft GUI</h1>
 
-  <div id="hint-panel" class="hint-panel" hidden>
-    <p class="hint-panel__title">How to play</p>
-    <ul class="hint-panel__list">
-      <li>Drag items between slots</li>
-      <li>Right-click to remove an item</li>
-      <li>Double-click to inspect an item</li>
-    </ul>
-    <p class="hint-panel__dismiss">Click anywhere to dismiss</p>
-  </div>
-
   <div class="workspace">
     <div class="mc-panel">
       <div class="hopper-gui">
@@ -26,7 +16,6 @@
           <div class="bag-header">
             <div class="gui-label">Bag</div>
             <div class="panel-actions">
-              <button class="mc-icon-btn" id="btn-info" title="How to play">ℹ</button>
               <button class="mc-icon-btn" id="btn-shuffle" title="Shuffle inventory">↺</button>
               <button class="mc-icon-btn" id="btn-clear" title="Clear all slots">✕</button>
             </div>
@@ -65,6 +54,7 @@
 
   <footer class="site-footer">
     <span class="site-footer__copy">&copy; 2026 MC Inventory</span>
+    <span class="site-footer__controls">Right Click: Remove • Double Click: Inspect</span>
     <span class="site-footer__name">Míriam Domínguez Martínez</span>
   </footer>
 

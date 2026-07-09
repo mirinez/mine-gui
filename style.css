@@ -145,4 +145,5 @@ h1 { font-size: 10px; color: var(--title); letter-spacing: 2px; margin-bottom: 3
   border-color: var(--mc-light) var(--mc-slot) var(--mc-slot) var(--mc-light); box-shadow: inset -2px -2px 0 var(--mc-darker), inset 2px 2px 0 var(--mc-light);
 }
 .site-footer__copy { color: var(--mc-label); }
+.site-footer__controls { color: var(--mc-label); }
 .site-footer__name { color: var(--footer); }
