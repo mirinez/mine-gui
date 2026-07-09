@@ -1,13 +1,12 @@
 <!--
-  index.html - Minecraft GUI | Portfolio Project
-  Interactive Minecraft-style inventory UI with drag-and-drop items
+  index.html - Minecraft GUI
 -->
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
 
-  <!-- ============================================================
+  <!--
        META & PAGE SETUP
   -->
   <meta charset="UTF-8" />
@@ -18,14 +17,13 @@
 </head>
 <body>
 
-  <!-- ============================================================
+  <!--
        PAGE TITLE
   -->
   <h1>Minecraft GUI</h1>
 
-  <!-- ============================================================
+  <!--
        FIRST-VISIT HINT PANEL
-       Shown once on first load, dismissed on click or after 6 seconds.
   -->
   <div id="hint-panel" class="hint-panel" hidden>
     <p class="hint-panel__title">How to play</p>
@@ -37,7 +35,7 @@
     <p class="hint-panel__dismiss">Click anywhere to dismiss</p>
   </div>
 
-  <!-- ============================================================
+  <!--
        WORKSPACE - contains the GUI panel
   -->
   <div class="workspace">
@@ -46,7 +44,6 @@
     <div class="mc-panel">
       <div class="hopper-gui">
 
-        <!-- Bag: 5 input slots + icon action buttons top-right -->
         <div>
           <div class="bag-header">
             <div class="gui-label">Bag</div>
@@ -65,7 +62,6 @@
           </div>
         </div>
 
-        <!-- Inventory: 27 slots (3×9) + hotbar (1×9), built by JS -->
         <div>
           <div class="gui-label">Inventory</div>
           <div class="grid inv-grid"    id="inventory-slots"></div>
@@ -74,7 +70,6 @@
           <div class="grid hotbar-grid" id="hotbar-slots"></div>
         </div>
 
-        <!-- Bottom padding to match original Minecraft GUI proportions -->
         <div class="gui-bottom-spacer"></div>
 
       </div>
@@ -82,9 +77,8 @@
 
   </div>
 
-  <!-- ============================================================
+  <!--
        ITEM INSPECTOR MODAL
-       Opens on double-click; shows item name, id and a flavour description.
   -->
   <div id="inspector-overlay" class="inspector-overlay" hidden>
     <div class="inspector-panel" role="dialog" aria-modal="true" aria-labelledby="inspector-name">
@@ -105,7 +99,7 @@
     </div>
   </div>
 
-  <!-- ============================================================
+  <!--
        FOOTER
   -->
   <footer class="site-footer">
@@ -113,12 +107,12 @@
     <span class="site-footer__name">Míriam Domínguez Martínez</span>
   </footer>
 
-  <!-- ============================================================
+  <!--
        TOOLTIP
   -->
   <div id="tooltip"></div>
 
-  <!-- ============================================================
+  <!--
        JAVASCRIPT
   -->
   <script type="module" src="main.js"></script>
