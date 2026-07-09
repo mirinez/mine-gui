@@ -1,30 +1,20 @@
 /*
   main.js - Minecraft GUI | Portfolio Project
-  Handles slot building, item rendering, drag-and-drop, tooltip, ghost cursor,
-  Web Audio sound effects, LocalStorage persistence, item inspector modal,
-  shuffle / clear toolbar actions, and item count badges.
-*/
-
-/*
-  Rendering approach:
-    Every item is drawn onto a <canvas> element using imageSmoothingEnabled = false.
-    This forces nearest-neighbour scaling at the Canvas API level, preventing the
-    bilinear interpolation blur that CSS image-rendering alone cannot always suppress.
 */
 
 import { ITEMS } from './items.js';
 
-/* ================================================================
+/*
    0. CONSTANTS
 */
 
-const IMG_PX       = 38;                                        // item canvas CSS size inside the slot
-const DPR          = Math.round(window.devicePixelRatio) || 1;  // physical pixel ratio (1× or 2× on Retina)
-const PHY          = IMG_PX * DPR;                              // canvas physical resolution (avoids blur on HiDPI)
-const STORAGE_KEY  = 'mc-gui-inventory';                        // localStorage key for persisting slot state
-const ITEM_COUNTS  = [1, 2, 4, 8, 16, 32, 64];                  // realistic Minecraft stack sizes
+const IMG_PX       = 38;                                     
+const DPR          = Math.round(window.devicePixelRatio) || 1;
+const PHY          = IMG_PX * DPR;                           
+const STORAGE_KEY  = 'mc-gui-inventory';                      
+const ITEM_COUNTS  = [1, 2, 4, 8, 16, 32, 64];
 
-/* ================================================================
+/*
    1. DOM REFERENCES
 */
 
@@ -39,10 +29,8 @@ const btnShuffle        = document.getElementById('btn-shuffle');
 const btnClear          = document.getElementById('btn-clear');
 const btnInfo           = document.getElementById('btn-info');
 
-/* ================================================================
+/*
    2. GHOST CANVAS SETUP
-   A single fixed <canvas> that follows the cursor during drag.
-   Created dynamically and appended once at startup.
 */
 
 const ghost = document.createElement('canvas');
@@ -63,18 +51,16 @@ ghost.style.cssText = `
 document.body.appendChild(ghost);
 
 const ghostCtx = ghost.getContext('2d');
-ghostCtx.imageSmoothingEnabled = false; /* nearest-neighbour on the ghost */
+ghostCtx.imageSmoothingEnabled = false;
 
-/* ================================================================
+/*
    3. DRAG STATE
 */
 
 let dragSrc = null; /* { el, id, name, src, count } */
 
-/* ================================================================
+/*
    4. IMAGE CACHE
-   Keeps one HTMLImageElement per src path so images are only
-   fetched once and reused across all slots and the ghost.
 */
 
 const cache = {};
@@ -90,11 +76,8 @@ function getImg(src) {
 // Preload all item images as soon as the module runs
 ITEMS.forEach(item => getImg(item.src));
 
-/* ================================================================
+/*
    5. PIXEL DRAW
-   Draws an image into a canvas at full canvas resolution
-   with imageSmoothingEnabled = false (nearest-neighbour).
-   Waits for the image to load if it has not yet arrived.
 */
 
 function drawPixel(canvas, src) {
@@ -115,25 +98,16 @@ function drawPixel(canvas, src) {
   }
 }
 
-/* ================================================================
+/*
    6. WEB AUDIO SOUND EFFECTS
-   All sounds are generated procedurally via the Web Audio API, no external asset files required.
 */
 
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-/*
-  Resumes the AudioContext after the first user gesture.
-  Browsers suspend AudioContext until an interaction occurs.
-*/
 function resumeAudio() {
   if (audioCtx.state === 'suspended') audioCtx.resume();
 }
 
-/*
-  Plays a short percussive "pop" click: a sine burst with a fast
-  exponential decay, pitched slightly randomly for variation.
-*/
 function playPickup() {
   resumeAudio();
   const osc  = audioCtx.createOscillator();
@@ -156,9 +130,6 @@ function playPickup() {
   osc.stop(now + 0.1);
 }
 
-/*
-  Plays a slightly lower "thud" pop for placing / dropping an item.
-*/
 function playPlace() {
   resumeAudio();
   const osc  = audioCtx.createOscillator();
@@ -181,9 +152,6 @@ function playPlace() {
   osc.stop(now + 0.12);
 }
 
-/*
-  Short "whoosh" sweep used for the shuffle action.
-*/
 function playWhoosh() {
   resumeAudio();
   const bufSize = audioCtx.sampleRate * 0.12;
@@ -211,10 +179,8 @@ function playWhoosh() {
   src.start();
 }
 
-/* ================================================================
+/*
    7. SLOT BUILDER
-   Programmatically creates <div class="slot"> elements and appends
-   them to the given container. Slot IDs follow the pattern prefix+i.
 */
 
 function buildSlots(containerId, count, prefix) {
@@ -227,11 +193,10 @@ function buildSlots(containerId, count, prefix) {
   }
 }
 
-/* ================================================================
+/*
    8. SLOT HELPERS
 */
 
-/* Reads item data from a slot's data attributes */
 function itemDataFrom(el) {
   const id    = el.dataset.itemId;
   const name  = el.dataset.itemName;
@@ -241,13 +206,6 @@ function itemDataFrom(el) {
   return { id, name, src, count };
 }
 
-/*
-  Places an item into a slot with an entrance animation.
-  - GIF → uses <img> so the browser plays the animation natively.
-  - PNG → uses <canvas> with imageSmoothingEnabled = false for crisp pixel art.
-  count: optional number shown as a badge; omit or pass null to hide it.
-  animate: whether to trigger the pop-in animation (default true).
-*/
 function placeItem(slot, id, name, src, count = null, animate = true) {
   slot.innerHTML = ''; /* clear any previous content */
 
@@ -305,7 +263,6 @@ function placeItem(slot, id, name, src, count = null, animate = true) {
   }
 }
 
-/* Removes an item from a slot and clears all data attributes */
 function clearSlot(slot) {
   slot.innerHTML = '';
   delete slot.dataset.itemId;
@@ -314,16 +271,10 @@ function clearSlot(slot) {
   delete slot.dataset.count;
 }
 
-/* ================================================================
+/*
    9. LOCALSTORAGE PERSISTENCE
-   Saves and restores the full inventory state so the user's
-   layout survives page reloads.
 */
 
-/*
-  Every slot's item data into a plain object and stores
-  it in localStorage under STORAGE_KEY.
-*/
 function saveState() {
   const state = {};
   document.querySelectorAll('.slot').forEach(slot => {
@@ -334,11 +285,6 @@ function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
-/*
-  Reads the saved state from localStorage and re-populates slots
-  without the entrance animation (silent restore on load).
-  Returns true if any saved data was found, false otherwise.
-*/
 function loadState() {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) return false;
@@ -347,10 +293,9 @@ function loadState() {
   try {
     state = JSON.parse(raw);
   } catch {
-    return false; /* corrupt data, ignore and fall back to random fill */
+    return false;
   }
-
-  // If the saved state has no items at all, treat it as empty so fillInventory runs on next load instead.
+  
   if (Object.keys(state).length === 0) return false;
 
   Object.entries(state).forEach(([key, data]) => {
@@ -361,11 +306,8 @@ function loadState() {
   return true;
 }
 
-/* ================================================================
+/*
    10. FILL INVENTORY
-    Shuffles ITEMS and distributes them randomly across inventory
-    and hotbar slots. The 5 Bag slots are always left empty.
-    Each item also receives a random realistic stack count.
 */
 
 function fillInventory() {
@@ -377,7 +319,6 @@ function fillInventory() {
   // Clear all slots including the bag
   document.querySelectorAll('.slot').forEach(clearSlot);
 
-  // Fisher-Yates shuffle, produces a random order of ITEMS
   const shuffled = [...ITEMS];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -396,10 +337,8 @@ function fillInventory() {
   saveState();
 }
 
-/* ================================================================
+/*
    11. TOOLTIP
-   Follows the mouse and shows the item name of any occupied slot.
-   Hidden during drag to avoid visual clutter.
 */
 
 document.addEventListener('mousemove', e => {
@@ -422,9 +361,8 @@ document.addEventListener('mousemove', e => {
   tooltipEl.style.top     = (e.clientY + 14) + 'px';
 });
 
-/* ================================================================
+/*
    12. GHOST POSITIONING
-   Keeps the ghost canvas centred on the cursor while dragging.
 */
 
 function moveGhost(x, y) {
@@ -436,47 +374,37 @@ document.addEventListener('mousemove', e => {
   if (dragSrc) moveGhost(e.clientX, e.clientY);
 });
 
-/* ================================================================
-   13. DRAG & DROP (Pointer Events)
-   Uses pointer events instead of the HTML5 Drag API for full
-   control over the ghost image and cross-device compatibility.
+/*
+   13. DRAG & DROP
 */
 
-/* pointerdown, start dragging an occupied slot */
 document.addEventListener('pointerdown', e => {
   const el = e.target.closest('.slot');
   if (!el) return;
 
   const data = itemDataFrom(el);
-  if (!data) return; /* empty slot, nothing to drag */
-
+  if (!data) return;
   e.preventDefault();
   dragSrc = { el, ...data };
 
-  // Draw the item into the ghost canvas and show it
-  // GIFs are drawn via drawPixel too, first frame only on ghost is acceptable
   ghostCtx.clearRect(0, 0, PHY, PHY);
   drawPixel(ghost, data.src);
   moveGhost(e.clientX, e.clientY);
   ghost.style.display     = 'block';
-  el.style.opacity        = '0.3'; /* dim the source slot */
+  el.style.opacity        = '0.3';
   tooltipEl.style.display = 'none';
 
   playPickup();
 });
 
-/* pointermove, move ghost, highlight slot under cursor */
 document.addEventListener('pointermove', e => {
   if (!dragSrc) return;
   e.preventDefault();
   moveGhost(e.clientX, e.clientY);
-
-  // Remove previous highlight, add to slot currently under cursor
   document.querySelectorAll('.slot.drag-over').forEach(s => s.classList.remove('drag-over'));
   document.elementFromPoint(e.clientX, e.clientY)?.closest('.slot')?.classList.add('drag-over');
 });
 
-/* pointerup, drop item onto target slot */
 document.addEventListener('pointerup', e => {
   if (!dragSrc) return;
 
@@ -490,11 +418,9 @@ document.addEventListener('pointerup', e => {
     const { id, name, src, count, el } = dragSrc;
 
     if (target.dataset.itemId) {
-      // Target is occupied, swap the two items
       placeItem(el, target.dataset.itemId, target.dataset.itemName, target.dataset.itemSrc,
         target.dataset.count ? Number(target.dataset.count) : null);
     } else {
-      // Target is empty, move item, leave source empty
       clearSlot(el);
     }
 
@@ -506,11 +432,6 @@ document.addEventListener('pointerup', e => {
   dragSrc = null;
 });
 
-/*
-  pointercancel, fired when the browser interrupts the pointer sequence
-  (e.g. window loses focus, touch is cancelled by a phone call).
-  Resets drag state cleanly so the UI never gets stuck.
-*/
 document.addEventListener('pointercancel', () => {
   if (!dragSrc) return;
   dragSrc.el.style.opacity = '1';
@@ -519,9 +440,8 @@ document.addEventListener('pointercancel', () => {
   dragSrc = null;
 });
 
-/* ================================================================
+/*
    14. RIGHT-CLICK TO CLEAR
-   Right-clicking any occupied slot removes the item from it.
 */
 
 document.addEventListener('contextmenu', e => {
@@ -534,10 +454,8 @@ document.addEventListener('contextmenu', e => {
   }
 });
 
-/* ================================================================
+/*
    15. DOUBLE-CLICK INSPECTOR
-   Double-clicking an occupied slot opens the inspector modal,
-   showing a large preview of the item plus a flavour description.
 */
 
 /* Short flavour descriptions keyed by item id */
@@ -578,7 +496,6 @@ function openInspector(data) {
   ctx.imageSmoothingEnabled = false;
 
   if (data.src.endsWith('.gif')) {
-    // Use an <img> tag inside the icon wrapper for animated GIF preview
     inspectorCanvas.style.display = 'none';
     let gifPreview = inspectorOverlay.querySelector('.inspector-gif-preview');
     if (!gifPreview) {
@@ -628,11 +545,10 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && !inspectorOverlay.hidden) closeInspector();
 });
 
-/* ================================================================
+/*
    16. TOOLBAR ACTIONS
 */
 
-/* Info - reopen the hint panel on demand */
 btnInfo.addEventListener('click', () => {
   hintPanel.classList.remove('hint-hiding');
   hintPanel.hidden = false;
@@ -640,33 +556,28 @@ btnInfo.addEventListener('click', () => {
   setTimeout(dismissHint, 6000);
 });
 
-/* Shuffle - randomise inventory and save new state */
 btnShuffle.addEventListener('click', () => {
   playWhoosh();
-  fillInventory(); /* fillInventory already calls saveState at the end */
+  fillInventory();
 });
 
-/* Clear all, wipe every slot and persist the empty state */
 btnClear.addEventListener('click', () => {
   document.querySelectorAll('.slot').forEach(clearSlot);
   saveState();
 });
 
-/* ================================================================
+/*
    17. INIT
-   Build dynamic slot grids, then restore the last saved state
-   or populate with a random layout if no saved state exists.
 */
 
-buildSlots('inventory-slots', 27, 'inv'); /* 3×9 inventory */
-buildSlots('hotbar-slots',     9, 'hot'); /* 1×9 hotbar    */
+buildSlots('inventory-slots', 27, 'inv');
+buildSlots('hotbar-slots',     9, 'hot'); 
 
 const restored = loadState();
-if (!restored) fillInventory(); /* first visit - start with a random fill */
-/* ================================================================
+if (!restored) fillInventory();
+
+/* 
    18. FIRST-VISIT HINT PANEL
-   Shown once on the first page load. Dismissed by any click or
-   automatically after 6 seconds. State stored in localStorage.
 */
 
 const HINT_KEY  = 'mc-gui-hint-seen';
@@ -685,11 +596,9 @@ function dismissHint() {
 function onHintDismiss() { dismissHint(); }
 
 if (!localStorage.getItem(HINT_KEY)) {
-  /* Small delay so the panel appears after the inventory wave animation starts */
   setTimeout(() => {
     hintPanel.hidden = false;
     document.addEventListener('pointerdown', onHintDismiss);
-    /* Auto-dismiss after 6 seconds if the user does not click */
     setTimeout(dismissHint, 6000);
   }, 400);
 }
