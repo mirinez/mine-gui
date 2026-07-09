@@ -3,7 +3,7 @@
   Minecraft-faithful inventory UI styles
 */
 
-/* ================================================================
+/*
    0. LOCAL FONT
 */
 
@@ -20,32 +20,25 @@
 */
 
 :root {
-  /* Slot sizing */
-  --slot-size: 48px;            /* width & height of each inventory slot */
-  --slot-gap:   4px;            /* gap between slots in the grid */
-
-  /* Panel width - 9 slots + 8 gaps + 2×12px padding + 2×3px border */
+  --slot-size: 48px;      
+  --slot-gap:   4px;           
   --panel-width: calc(9 * var(--slot-size) + 8 * var(--slot-gap) + 2 * 12px + 2 * 3px);
+  
+  --mc-bg:      #c6c6c6;     
+  --mc-darker:  #373737;    
+  --mc-light:   #ffffff;     
+  --mc-slot:    #8b8b8b;   
+  --mc-label:   #3d3d3d;
+  --page-bg:    #ffffff;    
+  --title:      #3a3a3a;     
+  --footer:     #aaaaaa;   
 
-  /* Minecraft UI palette */
-  --mc-bg:      #c6c6c6;      /* panel background grey */
-  --mc-darker:  #373737;      /* dark border edge (bottom-right bevel) */
-  --mc-light:   #ffffff;      /* light border edge (top-left bevel) */
-  --mc-slot:    #8b8b8b;      /* empty slot fill */
-  --mc-label:   #3d3d3d;      /* section label text */
-
-  /* Page */
-  --page-bg:    #ffffff;      /* outer page background */
-  --title:      #3a3a3a;      /* page heading color */
-  --footer:     #aaaaaa;      /* footer text color */
-
-  /* Tooltip */
-  --tooltip-bg:     #100010;  /* dark purple-black background */
-  --tooltip-border: #ffffff;  /* white border */
-  --tooltip-text:   #ffffff;  /* white text */
+  --tooltip-bg:     #100010;  
+  --tooltip-border: #ffffff;  
+  --tooltip-text:   #ffffff;
 }
 
-/* ================================================================
+/*
    2. RESET
 */
 
@@ -55,7 +48,7 @@
   padding: 0;
 }
 
-/* ================================================================
+/*
    3. BASE BODY STYLES
 */
 
@@ -70,7 +63,7 @@ body {
   padding: 40px 20px;
 }
 
-/* ================================================================
+/*
    4. PAGE TITLE
 */
 
@@ -83,11 +76,10 @@ h1 {
   text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
 }
 
-/* ================================================================
+/*
    5. WORKSPACE
 */
 
-/* Outer flex container, centres the panel horizontally */
 .workspace {
   display: flex;
   gap: 24px;
@@ -96,11 +88,10 @@ h1 {
   justify-content: center;
 }
 
-/* ================================================================
+/*
    6. MC PANEL
 */
 
-/* Classic Minecraft bevelled window frame */
 .mc-panel {
   background: var(--mc-bg);
   border: 3px solid;
@@ -111,25 +102,23 @@ h1 {
   padding: 12px;
 }
 
-/* ================================================================
+/*
    7. GUI LAYOUT
 */
 
-/* Vertical stack: Bag section → Inventory section → spacer */
 .hopper-gui {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-/* Small section labels (e.g. "Bag", "Inventory") */
 .gui-label {
   font-size: 7px;
   color: var(--mc-label);
   margin-bottom: 4px;
 }
 
-/* ================================================================
+/*
    8. SLOT
 */
 
@@ -149,23 +138,16 @@ h1 {
   position: relative;
 }
 
-/* Occupied slots, show grab cursor */
 .slot[data-item-id]        { cursor: grab; }
+
 .slot[data-item-id]:active { cursor: grabbing; }
 
-/* Highlight border when hovering an occupied slot */
 .slot[data-item-id]:hover  { border-color: whitesmoke; }
-
-/* Highlight when an item is being dragged over this slot */
 .slot.drag-over {
   background: #a0a0a0;
   border-color: whitesmoke;
 }
 
-/*
-  Item count badge, shown in the bottom-right corner of each occupied slot.
-  The number is set via the data-count attribute and rendered via CSS counter.
-*/
 .slot[data-count]::after {
   content: attr(data-count);
   position: absolute;
@@ -179,24 +161,17 @@ h1 {
   line-height: 1;
 }
 
-/*
-  Canvas inside each slot.
-  Pixel dimensions are set in JS (IMG_PX × DPR).
-  No CSS scaling, prevents bilinear interpolation blur on pixel art.
-*/
 .slot canvas,
 .slot img {
   display: block;
   pointer-events: none;
   user-select: none;
-  image-rendering: pixelated;     /* Chrome / Firefox */
-  image-rendering: crisp-edges;   /* Safari fallback  */
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;   
 }
 
-/* ================================================================
+/*
    9. ITEM ENTRANCE ANIMATION
-   Each item fades in and pops up slightly when placed.
-   Applied by JS via the .item-enter class; removed after the animation ends.
 */
 
 @keyframes item-pop {
@@ -208,23 +183,21 @@ h1 {
   animation: item-pop 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* ================================================================
+/*
    10. GRIDS
 */
 
 .grid        { display: grid; gap: var(--slot-gap); }
-.hopper-row  { grid-template-columns: repeat(5, var(--slot-size)); }  /* 5  slots - Bag     */
-.inv-grid    { grid-template-columns: repeat(9, var(--slot-size)); }  /* 27 slots - 3 rows  */
-.hotbar-grid { grid-template-columns: repeat(9, var(--slot-size)); }  /* 9  slots - Hotbar  */
+.hopper-row  { grid-template-columns: repeat(5, var(--slot-size)); } 
+.inv-grid    { grid-template-columns: repeat(9, var(--slot-size)); } 
+.hotbar-grid { grid-template-columns: repeat(9, var(--slot-size)); }
 
-/* Visual gap between the main inventory rows and the hotbar */
 .gap-row { height: 4px; }
 
-/* ================================================================
+/*
    11. TOOLTIP
 */
 
-/* Floating name label, displayed on mouseover occupied slots */
 #tooltip {
   display: none;
   position: fixed;
@@ -241,16 +214,14 @@ h1 {
   box-shadow: 2px 2px 0 #320032;
 }
 
-/* ================================================================
+/*
    12. BOTTOM SPACER
 */
 
-/* Maintains panel height consistent with the original Minecraft GUI */
 .gui-bottom-spacer { height: 10px; }
 
-/* ================================================================
+/*
    13. FIRST-VISIT HINT PANEL
-   Appears centered over the page on first load, fades out on dismiss.
 */
 
 .hint-panel {
@@ -272,8 +243,6 @@ h1 {
 }
 
 .hint-panel[hidden] { display: none; }
-
-/* Fade + scale out when dismissed */
 .hint-panel.hint-hiding {
   animation: hint-out 0.25s ease forwards;
   pointer-events: none;
@@ -337,11 +306,10 @@ h1 {
   50%       { opacity: 0; }
 }
 
-/* ================================================================
+/*
    14. PANEL ACTIONS
 */
 
-/* Row that holds the "Bag" label and the icon buttons side by side */
 .bag-header {
   display: flex;
   align-items: center;
@@ -349,16 +317,13 @@ h1 {
   margin-bottom: 4px;
 }
 
-/* The label inside bag-header doesn't need its own bottom margin anymore */
 .bag-header .gui-label { margin-bottom: 0; }
 
-/* Wrapper that keeps the two icon buttons together */
 .panel-actions {
   display: flex;
   gap: 4px;
 }
 
-/* Small square Minecraft-style icon button */
 .mc-icon-btn {
   font-family: 'Press Start 2P', monospace;
   font-size: 9px;
@@ -390,11 +355,10 @@ h1 {
     inset -1px -1px 0 var(--mc-light);
 }
 
-/* ================================================================
+/*
    15. INSPECTOR MODAL
 */
 
-/* Full-screen dark overlay */
 .inspector-overlay {
   position: fixed;
   inset: 0;
@@ -416,7 +380,6 @@ h1 {
   to   { opacity: 1; }
 }
 
-/* The modal panel itself */
 .inspector-panel {
   position: relative;
   background: var(--mc-bg);
@@ -432,7 +395,6 @@ h1 {
   align-items: flex-start;
   max-width: 380px;
   width: 90vw;
-  /* Pop in */
   animation: panel-in 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
@@ -441,7 +403,6 @@ h1 {
   to   { opacity: 1; transform: scale(1);    }
 }
 
-/* Large item preview */
 .inspector-icon-wrap {
   flex-shrink: 0;
   width: 64px;
@@ -461,7 +422,6 @@ h1 {
   image-rendering: crisp-edges;
 }
 
-/* Text section */
 .inspector-body {
   display: flex;
   flex-direction: column;
@@ -496,7 +456,6 @@ h1 {
   margin-top: 4px;
 }
 
-/* Close (✕) button - top-right corner */
 .inspector-close {
   position: absolute;
   top: 6px;
@@ -513,7 +472,7 @@ h1 {
 
 .inspector-close:hover { color: #000; }
 
-/* ================================================================
+/*
    16. FOOTER
 */
 
@@ -521,14 +480,12 @@ h1 {
   margin-top: 3px;
   padding: 10px 14px;
   width: 100%;
-  max-width: var(--panel-width);   /* aligns with the GUI panel width */
+  max-width: var(--panel-width);
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: 7px;
   letter-spacing: 1px;
-
-  /* Bevelled panel - mirrors .mc-panel */
   background: var(--mc-bg);
   border: 3px solid;
   border-color: var(--mc-light) var(--mc-slot) var(--mc-slot) var(--mc-light);
